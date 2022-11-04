@@ -1,6 +1,7 @@
 import psycopg2
 
 # MERK: Må kjøres med Python 3
+#Oppdatert TODO fjern
 
 user = 'edvinas' # Sett inn ditt UiO-brukernavn ("_priv" blir lagt til under)
 pwd = 'avahreeW2e' # Sett inn passordet for _priv-brukeren du fikk i en mail
