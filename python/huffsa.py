@@ -35,11 +35,27 @@ def planet_sok(conn: psycopg2):
     cur = conn.cursor()
     molekyl1 = input("Molekyl:")
     molekyl2 = input("Skriv et molekyl til eller trykk enter: ")
-    sporring = f"SELECT DISTINCT p.navn, p.masse, s.masse , s.avstand, liv\
-            FROM materie AS m\
-                INNER JOIN planet AS p ON (m.planet = p.navn)\
+
+    #Hvis det bare skrives et molekyl.
+    if molekyl2 == "":
+        molekyl2 = molekyl1
+
+
+    sporring = f"SELECT p.navn, p.masse, s.masse , s.avstand, liv\
+            FROM (\
+                SELECT DISTINCT planet\
+                FROM materie\
+                WHERE molekyl LIKE '%{molekyl1}%'\
+                ) AS m1\
+                \
+                INNER JOIN (\
+                SELECT DISTINCT planet\
+                FROM materie\
+                WHERE molekyl LIKE '%{molekyl2}%'\
+                ) AS m2 USING (planet)\
+                \
+                INNER JOIN planet as p ON (m2.planet = p.navn)\
                 INNER JOIN stjerne AS s ON (p.stjerne = s.navn)\
-            WHERE molekyl LIKE '%{molekyl1}%' AND molekyl LIKE '%{molekyl2}%'\
             ORDER BY p.navn;"
 
     cur.execute(sporring)
@@ -58,3 +74,25 @@ def legg_inn_resultat(conn):
 
 if __name__ == "__main__":
     huffsa()
+
+"""
+Sporring for oppgave 1.
+
+SELECT p.navn, p.masse, s.masse , s.avstand, liv
+            FROM (
+                SELECT DISTINCT planet
+                FROM materie
+                WHERE molekyl LIKE '%C2H2%'
+                ) AS m1
+
+                INNER JOIN
+                (
+                SELECT DISTINCT planet
+                FROM materie
+                WHERE molekyl LIKE '%K%'
+                ) AS m2 USING (planet)
+
+                INNER JOIN planet as p ON (m2.planet = p.navn)
+                INNER JOIN stjerne AS s ON (p.stjerne = s.navn)
+            ORDER BY p.navn;
+"""
