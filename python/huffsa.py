@@ -27,16 +27,18 @@ def huffsa():
         elif ch == "2":
             legg_inn_resultat(conn)
         elif ch == "3":
-            print("Hadet bra :)")
+            print("\nHadet bra :)")
         else:
             print("\nUgyldig kommando!")
 
+
 def planet_sok(conn: psycopg2):
+    print("--[ PLANET-SØK ]--")
     cur = conn.cursor()
     molekyl1 = input("Molekyl:")
     molekyl2 = input("Skriv et molekyl til eller trykk enter: ")
 
-    #Hvis det bare skrives et molekyl.
+        #Hvis det bare skrives et molekyl.
     if molekyl2 == "":
         molekyl2 = molekyl1
 
@@ -68,12 +70,52 @@ def planet_sok(conn: psycopg2):
         print(f"\n--PLANET--\nNavn: {rad[0]}\nPlanet-masse: {rad[1]}\
         \nStjerne-masse: {rad[2]}\nStjerne-distanse: {rad[3]}\nBekreftet liv: {liv}")
 
+    cur.close()
+
+
+#Antar at bruker alltid skriver gyldige verdier i alle feltene.
 def legg_inn_resultat(conn):
-    # TODO: Oppg 2
-    return
+    print("--[ LEGG INN RESULTAT ]--")
+
+    planetnavn = input("Planetnavn: ")
+
+    skummel = input("Skummel j/n: ")
+    if skummel == "j":
+        skummel = True
+    elif skummel == "n":
+        skummel = False
+
+    intelligent = input("Intelligent j/n: ")
+    if intelligent == "j":
+        intelligent = True
+    elif intelligent == "n":
+        intelligent = False
+
+    beskrivelse = input("Beskrivelse: ")
+
+    cur = conn.cursor()
+    sporring = f"UPDATE planet\
+                SET skummel = {skummel}, intelligent = {intelligent}, beskrivelse = '{beskrivelse}'\
+                WHERE navn = '{planetnavn}'"
+
+    cur.execute(sporring)
+    conn.commit()
+
+    oppdatert = f"SELECT * FROM planet WHERE navn = '{planetnavn}'"
+    cur.execute(oppdatert)
+    for rad in cur.fetchall():
+        print(f"\n--OPPDATERT--\nNavn: {rad[0]}\nLiv: {rad[4]}\nSkummel: {rad[5]}\nIntelligent: {rad[6]}\nBeskrivelse: {rad[7]}")
+
+    cur.close()
+
 
 if __name__ == "__main__":
     huffsa()
+
+
+
+
+
 
 """
 Sporring for oppgave 1.
