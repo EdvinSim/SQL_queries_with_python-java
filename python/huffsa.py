@@ -47,18 +47,18 @@ def planet_sok(conn: psycopg2):
             FROM (\
                 SELECT DISTINCT planet\
                 FROM materie\
-                WHERE molekyl LIKE '%{molekyl1}%'\
+                WHERE molekyl LIKE '{molekyl1}'\
                 ) AS m1\
                 \
                 INNER JOIN (\
                 SELECT DISTINCT planet\
                 FROM materie\
-                WHERE molekyl LIKE '%{molekyl2}%'\
+                WHERE molekyl LIKE '{molekyl2}'\
                 ) AS m2 USING (planet)\
                 \
                 INNER JOIN planet as p ON (m2.planet = p.navn)\
                 INNER JOIN stjerne AS s ON (p.stjerne = s.navn)\
-            ORDER BY p.navn;"
+            ORDER BY s.avstand;"
 
     cur.execute(sporring)
 
@@ -124,17 +124,17 @@ SELECT p.navn, p.masse, s.masse , s.avstand, liv
             FROM (
                 SELECT DISTINCT planet
                 FROM materie
-                WHERE molekyl LIKE '%C2H2%'
+                WHERE molekyl LIKE 'C2H2'
                 ) AS m1
 
                 INNER JOIN
                 (
                 SELECT DISTINCT planet
                 FROM materie
-                WHERE molekyl LIKE '%K%'
+                WHERE molekyl LIKE 'K'
                 ) AS m2 USING (planet)
 
                 INNER JOIN planet as p ON (m2.planet = p.navn)
                 INNER JOIN stjerne AS s ON (p.stjerne = s.navn)
-            ORDER BY p.navn;
+            ORDER BY s.avstand;
 """
